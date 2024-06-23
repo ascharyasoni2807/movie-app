@@ -1,41 +1,43 @@
-import React, { useEffect } from "react";
+// components/MovieList.js
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchMovies } from "../actions/movieActions";
-import "./MovieList.css"; // Import your CSS file for styling
+import { fetchMovies, handleMovieSearch } from "../actions/movieActions";
+import "./MovieList.css";
+import MovieCard from "./movie_card/MovieCard";
 
-const MovieList = ({ movieStatus, movies, error, fetchMovies }) => {
+const MovieList = ({
+  movieStatus,
+  movies,
+  searchResults,
+  error,
+  fetchMovies,
+  handleMovieSearch,
+}) => {
+  const [query, setQuery] = useState("");
+
   useEffect(() => {
     if (movieStatus === "idle") {
       fetchMovies();
     }
   }, [movieStatus, fetchMovies]);
 
+  const handleSearch = (event) => {
+    setQuery(event.target.value);
+    if (event.target.value.length > 2) {
+      handleMovieSearch(event.target.value);
+    }
+  };
+
   let content;
 
   if (movieStatus === "loading") {
     content = <p>Loading...</p>;
   } else if (movieStatus === "succeeded") {
+    const moviesToDisplay = query.length > 2 ? searchResults : movies;
     content = (
       <div className="movie-grid">
-        {movies.map((movie) => (
-          <div className="movie-card" key={movie.id}>
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-            />
-            <div className="movie-info">
-              <h3>{movie.title}</h3>
-              <p>
-                <strong>Release Date:</strong> {movie.release_date}
-              </p>
-              <p>
-                <strong>Vote Count:</strong> {movie.vote_count}
-              </p>
-              <p>
-                <strong>Popularity:</strong> {movie.popularity}
-              </p>
-            </div>
-          </div>
+        {moviesToDisplay.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
     );
@@ -46,6 +48,12 @@ const MovieList = ({ movieStatus, movies, error, fetchMovies }) => {
   return (
     <section>
       <h2>Movies</h2>
+      <input
+        type="text"
+        value={query}
+        onChange={handleSearch}
+        placeholder="Search for movies..."
+      />
       {content}
     </section>
   );
@@ -53,12 +61,14 @@ const MovieList = ({ movieStatus, movies, error, fetchMovies }) => {
 
 const mapStateToProps = (state) => ({
   movies: state.movies.movies,
+  searchResults: state.search.result,
   movieStatus: state.movies.status,
   error: state.movies.error,
 });
 
 const mapDispatchToProps = {
   fetchMovies,
+  handleMovieSearch,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MovieList);
