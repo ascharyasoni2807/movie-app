@@ -1,9 +1,10 @@
 // components/MovieList.js
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchMovies, handleMovieSearch } from "../actions/movieActions";
+import { fetchMovies, handleMovieSearch } from "../../actions/movieActions";
 import "./MovieList.css";
-import MovieCard from "./movie_card/MovieCard";
+import MovieCard from "../../components/movie_card/MovieCard";
+import SearchBar from "../../components/search_bar/SearchBar";
 
 const MovieList = ({
   movieStatus,
@@ -36,7 +37,7 @@ const MovieList = ({
     const moviesToDisplay = query.length > 2 ? searchResults : movies;
     content = (
       <div className="movie-grid">
-        {moviesToDisplay.map((movie) => (
+        {moviesToDisplay?.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
@@ -46,16 +47,11 @@ const MovieList = ({
   }
 
   return (
-    <section>
+    <>
       <h2>Movies</h2>
-      <input
-        type="text"
-        value={query}
-        onChange={handleSearch}
-        placeholder="Search for movies..."
-      />
+      <SearchBar query={query} handleSearch={handleSearch} />
       {content}
-    </section>
+    </>
   );
 };
 
