@@ -1,0 +1,37 @@
+/* MovieList.css */
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.movie-card {
+    background-color: #f0f0f0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 0.1rem solid #ddd;
+}
+
+.movie-info {
+    padding: 1rem;
+}
+
+.movie-info h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.movie-info p {
+    margin: 1rem 0;
+    font-size: 1.4rem;
+    color: #666;
+}
