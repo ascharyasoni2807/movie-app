@@ -1,10 +1,11 @@
 // components/MovieList.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { fetchMovies, handleMovieSearch } from "../../actions/movieActions";
 import "./MovieList.css";
 import MovieCard from "../../components/movie_card/MovieCard";
 import SearchBar from "../../components/search_bar/SearchBar";
+import { debounce } from "../../utils";
 
 const MovieList = ({
   movieStatus,
@@ -13,6 +14,7 @@ const MovieList = ({
   error,
   fetchMovies,
   handleMovieSearch,
+  isLoading,
 }) => {
   const [query, setQuery] = useState("");
 
@@ -22,24 +24,32 @@ const MovieList = ({
     }
   }, [movieStatus, fetchMovies]);
 
-  const handleSearch = (event) => {
+  //  using debouncer
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleMovieSearch = useCallback(
+    debounce(handleMovieSearch, 300),
+    []
+  );
+  const handleSearch = async (event) => {
     setQuery(event.target.value);
     if (event.target.value.length > 2) {
-      handleMovieSearch(event.target.value);
+      await debouncedHandleMovieSearch(event.target.value);
     }
   };
 
   let content;
 
-  if (movieStatus === "loading") {
-    content = <p>Loading...</p>;
+  if (movieStatus === "loading" || isLoading) {
+    content = <div className="custom-spinner"></div>;
   } else if (movieStatus === "succeeded") {
     const moviesToDisplay = query.length > 2 ? searchResults : movies;
     content = (
       <div className="movie-grid">
-        {moviesToDisplay?.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+        {moviesToDisplay.length > 0
+          ? moviesToDisplay?.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))
+          : "No Movie Found"}
       </div>
     );
   } else if (movieStatus === "failed") {
@@ -49,7 +59,9 @@ const MovieList = ({
   return (
     <>
       <h2>Movies</h2>
-      <SearchBar query={query} handleSearch={handleSearch} />
+      <div>
+        <SearchBar query={query} handleSearch={handleSearch} />
+      </div>
       {content}
     </>
   );
@@ -60,6 +72,7 @@ const mapStateToProps = (state) => ({
   searchResults: state.search.result,
   movieStatus: state.movies.status,
   error: state.movies.error,
+  isLoading: state.isLoading,
 });
 
 const mapDispatchToProps = {

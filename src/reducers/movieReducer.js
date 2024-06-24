@@ -3,6 +3,8 @@ import {
   FETCH_MOVIES_SUCCESS,
   FETCH_MOVIES_FAILURE,
   ADD_SEARCH_RESULT,
+  START_SEARCH,
+  END_SEARCH,
 } from "../actions/movieActions";
 
 const initialState = {
@@ -35,17 +37,31 @@ export const movieReducer = (state = initialState, action) => {
   }
 };
 
-const initialSeacrhState = {
+const initialSearchState = {
   result: [],
   showSearchResults: false,
+  isLoading: false,
 };
-export const searchReducer = (state = initialSeacrhState, action) => {
+
+export const searchReducer = (state = initialSearchState, action) => {
   switch (action.type) {
+    case START_SEARCH:
+      return {
+        ...state,
+        isLoading: true,
+        showSearchResults: false,
+      };
+    case END_SEARCH:
+      return {
+        ...state,
+        isLoading: false,
+      };
     case ADD_SEARCH_RESULT:
       return {
         ...state,
         result: action.movies,
         showSearchResults: true,
+        isLoading: false,
       };
     default:
       return state;

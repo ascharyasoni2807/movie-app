@@ -5,6 +5,8 @@ export const FETCH_MOVIES_SUCCESS = "FETCH_MOVIES_SUCCESS";
 export const FETCH_MOVIES_FAILURE = "FETCH_MOVIES_FAILURE";
 
 export const ADD_SEARCH_RESULT = "ADD_SEARCH_RESULT";
+export const START_SEARCH = "START_SEARCH";
+export const END_SEARCH = "END_SEARCH";
 
 export const fetchMoviesRequest = () => ({
   type: FETCH_MOVIES_REQUEST,
