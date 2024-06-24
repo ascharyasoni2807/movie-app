@@ -66,15 +66,16 @@ const MovieList = ({
       <h2>Movies</h2>
       <div>
         <SearchBar query={query} handleSearch={handleSearch} />
-        <button
-          onClick={() => {
-            setCurrentPage((prev) => prev + 1);
-          }}
-        >
-          Load More Movies
-        </button>
       </div>
       {content}
+      <button
+        className="load-more-button "
+        onClick={() => {
+          setCurrentPage((prev) => prev + 1);
+        }}
+      >
+        Load More Movies
+      </button>
     </>
   );
 };
