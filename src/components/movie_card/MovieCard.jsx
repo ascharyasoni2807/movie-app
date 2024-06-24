@@ -9,7 +9,7 @@ const MovieCard = ({ movie }) => {
         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
         alt={movie.title}
         onError={(e) => {
-          e.target.onerror = null; // Prevents infinite loop if the default image also fails
+          e.target.onerror = null;
           e.target.src =
             "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
         }}

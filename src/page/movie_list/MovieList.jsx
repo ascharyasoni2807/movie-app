@@ -26,7 +26,7 @@ const MovieList = ({
   }, [movieStatus, fetchMovies]);
 
   useEffect(() => {
-    fetchMovies(currentPage); // Pass currentPage to fetchMovies
+    fetchMovies(currentPage);
   }, [currentPage, fetchMovies]);
   console.log(currentPage);
   //  using debouncer
@@ -37,7 +37,7 @@ const MovieList = ({
   );
   const handleSearch = async (event) => {
     setQuery(event.target.value);
-    if (event.target.value.length > 2) {
+    if (event.target.value.length > 1) {
       await debouncedHandleMovieSearch(event.target.value);
     }
   };
