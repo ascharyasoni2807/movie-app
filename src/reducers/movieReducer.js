@@ -21,10 +21,16 @@ export const movieReducer = (state = initialState, action) => {
         status: "loading",
       };
     case FETCH_MOVIES_SUCCESS:
+      const uniqueMovies = action.payload.filter(
+        (newMovie) =>
+          !state.movies.some(
+            (existingMovie) => existingMovie.id === newMovie.id
+          )
+      );
       return {
         ...state,
         status: "succeeded",
-        movies: action.payload,
+        movies: [...state.movies, ...uniqueMovies],
       };
     case FETCH_MOVIES_FAILURE:
       return {

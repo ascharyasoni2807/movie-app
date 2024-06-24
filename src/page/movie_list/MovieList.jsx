@@ -17,6 +17,7 @@ const MovieList = ({
   isLoading,
 }) => {
   const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (movieStatus === "idle") {
@@ -24,6 +25,10 @@ const MovieList = ({
     }
   }, [movieStatus, fetchMovies]);
 
+  useEffect(() => {
+    fetchMovies(currentPage); // Pass currentPage to fetchMovies
+  }, [currentPage, fetchMovies]);
+  console.log(currentPage);
   //  using debouncer
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedHandleMovieSearch = useCallback(
@@ -61,6 +66,13 @@ const MovieList = ({
       <h2>Movies</h2>
       <div>
         <SearchBar query={query} handleSearch={handleSearch} />
+        <button
+          onClick={() => {
+            setCurrentPage((prev) => prev + 1);
+          }}
+        >
+          Load More Movies
+        </button>
       </div>
       {content}
     </>

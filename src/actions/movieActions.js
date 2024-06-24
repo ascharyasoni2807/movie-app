@@ -29,12 +29,12 @@ export function addMovieSearchResult(movies) {
   };
 }
 
-export const fetchMovies = () => {
+export const fetchMovies = (page = 1) => {
   return async (dispatch) => {
     dispatch(fetchMoviesRequest());
     try {
       const response = await fetch(
-        "https://api.themoviedb.org/3/discover/movie",
+        `https://api.themoviedb.org/3/discover/movie?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${TMDB_API_KEY}`,
@@ -44,7 +44,7 @@ export const fetchMovies = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("data", data);
-        dispatch(fetchMoviesSuccess(data.results));
+        dispatch(fetchMoviesSuccess(data.results, page));
       } else {
         dispatch(fetchMoviesFailure(data.status_message));
       }
